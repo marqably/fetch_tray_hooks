@@ -1,4 +1,5 @@
 import 'package:fetch_tray/fetch_tray.dart';
+import 'package:fetch_tray_hooks/fetch_tray_hooks.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,6 +9,7 @@ import '../mockdata/models/mock_user.dart';
 import '../mockdata/requests/fetch_mock_user_request.dart';
 
 void main() {
+  setUp(() => FetchTray.init());
   group('useMakeTrayRequest basic', () {
     testWidgets('successful requests are correctly parsed', (tester) async {
       late MockUser? response;
@@ -114,6 +116,8 @@ void main() {
 
       // make sure we get the correct error result object
       expect(hookResult.error, isA<TrayRequestError>());
+
+      print(hookResult.error?.message);
 
       // check the error properties
       expect(hookResult.error?.message, 'not allowed');

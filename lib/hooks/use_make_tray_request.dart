@@ -1,13 +1,9 @@
 import 'dart:developer';
 
-import 'package:fetch_tray/contracts/tray_request_metadata.dart';
-import 'package:fetch_tray/contracts/tray_environment.dart';
-import 'package:fetch_tray/contracts/tray_request.dart';
-import 'package:fetch_tray/utils/make_tray_request.dart';
-import 'package:fetch_tray/utils/make_tray_testing_request.dart';
+import 'package:dio/dio.dart';
+import 'package:fetch_tray/fetch_tray.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:http/http.dart' as http;
-import 'package:mockito/annotations.dart';
+
 import 'package:mockito/mockito.dart';
 
 import './use_make_tray_request.mocks.dart';
@@ -32,7 +28,6 @@ typedef UseMakeRequestFetchMethod<RequestType extends TrayRequest, ResultType,
 typedef TrayRequestFetchParser<ResultType> = ResultType Function(
     ResultType? oldData, ResultType newData);
 
-@GenerateMocks([http.Client])
 class TrayRequestHookResponse<RequestType extends TrayRequest, ResultType,
     MetadataType extends TrayRequestMetadata> {
   final UseMakeRequestFetchMethod<RequestType, ResultType, TrayRequestMetadata>
@@ -117,7 +112,7 @@ TrayRequestHookResponse<RequestType, ResultType, MetadataType>
     useMakeTrayRequest<RequestType extends TrayRequest, ResultType,
         MetadataType extends TrayRequestMetadata>(
   RequestType initialRequest, {
-  http.Client? client,
+  Dio? client,
   TrayRequestMock? mock,
   bool lazyRun = false,
   FetchTrayDebugLevel? requestDebugLevel = FetchTrayDebugLevel.none,
@@ -141,10 +136,7 @@ TrayRequestHookResponse<RequestType, ResultType, MetadataType>
   );
 
   // create the mock client
-  final mockClient = MockClient();
-
-  // get the correct request method
-  final methodCall = getEnvironmentMethod(mockClient, request.method);
+  final mockClient = MockDio();
 
   // mock request response
   Future<void> mockData() async {
@@ -152,14 +144,18 @@ TrayRequestHookResponse<RequestType, ResultType, MetadataType>
     final headers = await request.getHeaders();
     final body = await request.getBody();
 
-    when(methodCall(
-      url,
-      headers: headers,
-      body: body,
+    when(mockClient.request(
+      url.toString(),
+      data: body,
+      options: Options(
+        headers: headers,
+        responseType: ResponseType.json,
+      ),
     )).thenAnswer(
-      (_) async => http.Response(
-        mock?.result ?? '',
-        mock?.statusCode ?? 200,
+      (_) async => Response(
+        requestOptions: RequestOptions(),
+        data: mock?.result ?? '',
+        statusCode: mock?.statusCode ?? 200,
       ),
     );
   }

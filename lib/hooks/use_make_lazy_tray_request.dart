@@ -1,11 +1,9 @@
 import 'dart:developer';
 
-import '../contracts/tray_environment.dart';
-import '../contracts/tray_request.dart';
-import '../utils/make_tray_request.dart';
-import '../utils/make_tray_testing_request.dart';
+import 'package:dio/dio.dart';
+import 'package:fetch_tray/fetch_tray.dart';
+
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 
 import './use_make_tray_request.mocks.dart';
@@ -26,7 +24,7 @@ class LazyTrayRequestHookResponse {
 ///
 /// If [lazyRun] is set to true, the mutation will not run directly, but has to be triggered manually. This is useful for POST/PUT/DELETE requests.
 LazyTrayRequestHookResponse useMakeLazyTrayRequest({
-  http.Client? client,
+  Dio? client,
   TrayRequestMock? mock,
   FetchTrayDebugLevel? requestDebugLevel,
 }) {
@@ -35,29 +33,30 @@ LazyTrayRequestHookResponse useMakeLazyTrayRequest({
   // );
 
   // create the mock client
-  final mockClient = MockClient();
+  final mockClient = MockDio();
 
   return LazyTrayRequestHookResponse(makeRequest: <ResultType>(
     TrayRequest request, {
     FetchTrayDebugLevel? requestDebugLevel,
   }) async {
-    // get the correct request method
-    final methodCall = getEnvironmentMethod(mockClient, request.method);
-
     // await values
     final url = Uri.parse(await request.getUrlWithParams());
     final headers = await request.getHeaders();
     final body = await request.getBody();
 
     // mock request response
-    when(methodCall(
-      url,
-      headers: headers,
-      body: body,
+    when(mockClient.request(
+      url.toString(),
+      data: body,
+      options: Options(
+        headers: headers,
+        responseType: ResponseType.json,
+      ),
     )).thenAnswer(
-      (_) async => http.Response(
-        mock?.result ?? '',
-        mock?.statusCode ?? 200,
+      (_) async => Response(
+        requestOptions: RequestOptions(),
+        data: mock?.result ?? '',
+        statusCode: mock?.statusCode ?? 200,
       ),
     );
 
