@@ -1,1 +1,1 @@
-export 'hooks/hooks.dart';
+export 'src/hooks/hooks.dart';
