@@ -18,7 +18,7 @@ dependencies:
   fetch_tray:
     git:
       url: https://github.com/Lightgaming/fetch_tray.git
-      ref: 65714e488654c9563051354e0b6c88812bde2b42
+      ref: 9a34f0ddc5b61ec6fa77d0d6855c1300aa4c34b3
 
   hooks_riverpod: ^2.3.6
   dio: ^5.2.1+1
