@@ -16,9 +16,7 @@ dependencies:
     sdk: flutter
   flutter_hooks: ^0.20.4
   fetch_tray:
-    git:
-      url: https://github.com/Lightgaming/fetch_tray.git
-      ref: 6effd288177b80102e79d269f2ab1f619afc17b2
+    path: ../fetch_tray
 
   hooks_riverpod: ^2.3.6
   dio: ^5.2.1+1
