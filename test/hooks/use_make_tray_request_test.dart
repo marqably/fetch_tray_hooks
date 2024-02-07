@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mockdata/models/mock_user.dart';
-
 import '../mockdata/requests/fetch_mock_user_request.dart';
 
 void main() {
@@ -117,7 +116,7 @@ void main() {
       // make sure we get the correct error result object
       expect(hookResult.error, isA<TrayRequestError>());
 
-      print(hookResult.error?.message);
+      debugPrint(hookResult.error?.message);
 
       // check the error properties
       expect(hookResult.error?.message, 'not allowed');

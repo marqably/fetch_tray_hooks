@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TestWrapper extends StatelessWidget {
-  const TestWrapper({Key? key, required this.child}) : super(key: key);
+  const TestWrapper({super.key, required this.child});
 
   final Widget child;
 
