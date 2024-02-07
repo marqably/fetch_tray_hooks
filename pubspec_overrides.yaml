@@ -1,4 +1,0 @@
-# melos_managed_dependency_overrides: fetch_tray
-dependency_overrides:
-  fetch_tray:
-    path: ..\\fetch_tray
