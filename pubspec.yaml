@@ -15,7 +15,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_hooks: ^0.20.4
-  fetch_tray: 0.2.4
+  fetch_tray: ^0.3.3
   hooks_riverpod: ^2.3.6
   dio: ^5.2.1+1
   mockito: ^5.4.2
